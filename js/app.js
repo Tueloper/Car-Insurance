@@ -2,10 +2,9 @@
 const year = document.getElementById('year');
 const form = document.querySelector('#request-quote');
 const make = document.querySelector('#make');
-const level = document.querySelector("input[name='level']:checked");
 const errorRef = document.querySelector('.form-group');
 const htmlDisplay = new INIT();
-// console.log(htmlDisplay);
+// console.log(level);
 
 //Event Listeners
 eventListeners();
@@ -20,15 +19,24 @@ function eventListeners() {
 
     //read values
     const makeValue = make.value;
-    const yearValue = year.value;
-    const levelValue = level.value;
+    const yearValue = year.value; 
+    const levelValue = document.querySelector("input[name='level']:checked").value;
 
     // console.log(makeValue, yearValue, levelValue)
-    //reading if valuses are null
+    //reading if valuses are null 
     if (makeValue == '' || yearValue == '' || levelValue == '') {
+     
       //perform another function
       htmlDisplay.displayError('All Fields must be filled!!!')
     } else {
+      // return console.log(makeValue, yearValue, levelValue)
+      //removing previous div
+      const prevDiv = document.querySelector('#result div')
+
+      if (prevDiv != null) {
+        prevDiv.remove()
+      }
+
       const insureObj = new INSURANCE(makeValue, yearValue, levelValue);
       // return console.log(insureObj)
       const price = insureObj.calculateQuotation(insureObj);
@@ -193,5 +201,16 @@ INIT.prototype.showQuotes = function ( price, quotes) {
     <p class="total">Total: ${price}</p>
   `;
 
-  results.appendChild(div);
+  const spinner = document.querySelector('#loading img');
+
+  //to displa the loader
+  spinner.style.display = 'block';
+
+  //perform the function after the following seconds
+  setTimeout(function () {
+    //remove loader
+    spinner.style.display = 'none';
+
+    results.appendChild(div);
+  }, 2000)
 }
